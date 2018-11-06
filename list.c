@@ -3,22 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-/*
-struct SLnode {
-    int         key;
-    struct      SLnode *next;
-};
-typedef struct SLnode *SLnodePtr;
-
-
-struct HBnode
-{
-    int         key;
-    struct      HBnode *next;
-    SLnodePtr   bottom; 
-};
-*/
 void printHBlist(const HBnodePtr L)
 {
     HBnodePtr p = L;
@@ -69,44 +53,6 @@ static void addDown(HBnodePtr reference, int key)
 }
 
 
-// -----------------------------------------------------
-static void swap(int* a, int* b) 
-{ 
-    int t = *a; 
-    *a = *b; 
-    *b = t; 
-} 
-  
-static int split (int arr[], int low, int high) 
-{ 
-    int pivot = arr[high];    // pivot 
-    int i = (low - 1);  // Index of smaller element 
-  
-    for (int j = low; j <= high- 1; j++) 
-    { 
-        // If current element is smaller than or 
-        // equal to pivot 
-        if (arr[j] <= pivot) 
-        { 
-            i++;    // increment index of smaller element 
-            swap(&arr[i], &arr[j]); 
-        } 
-    } 
-    swap(&arr[i + 1], &arr[high]); 
-    return (i + 1); 
-} 
-static void quickSort(int arr[], int low, int high) 
-{ 
-    if (low < high) 
-    { 
-        int pi = split(arr, low, high); 
-        quickSort(arr, low, pi - 1); 
-        quickSort(arr, pi + 1, high); 
-    } 
-}
-// -----------------------------------------------------
-
-
 
 static void addRight(HBnodePtr reference, int key)
 {
@@ -117,14 +63,17 @@ static void addRight(HBnodePtr reference, int key)
     next->bottom = malloc(sizeof(SLnodePtr));
     next->bottom->key = -1;
 }
+static int comparfunc (const void * a, const void * b) {
+   return ( *(int*)a - *(int*)b );
+}
 static int getRandom(int *A, int upperBound)
 {
-    int range = rand()%(upperBound+1); // [0, upperBound]
+    int range = rand()%(upperBound+1); // [0, upperBound+1] +1 to compensate for the first node taking a value
     // printf("range:\t%d\n", range);
     int i;
     for(i = 0; i<range;i++)
         A[i] = rand()%1000; 
-    quickSort(A, 0, range-1);
+    qsort(A, range, sizeof(int), comparfunc);
     // for(int i = 0; i < range; i++)
     // {
     //     printf("%d, ",A[i]);
@@ -148,6 +97,7 @@ static void sortHBList(const HBnodePtr first)
                     i->bottom = j->bottom;
                     j->key = temp_key;
                     j->bottom = temp_bottom;
+                    // free(temp_bottom);
                 }
             }
     }
@@ -184,8 +134,9 @@ HBnodePtr createHBList(int n, int m)
 }
 int main(int argc, char const *argv[])
 {
-    
-    HBnodePtr L = createHBList(10, 10);
+    if(argc == 3)
+    {
+    HBnodePtr L = createHBList(atoi(argv[1]), atoi(argv[2]));
     printHBlist(L);
     sortHBList(L);
     printf("\n------------------------------\n");
@@ -193,6 +144,7 @@ int main(int argc, char const *argv[])
     // int A[10];
     // int *p = getRandom(A, 10);
     
+    }
     
     return 0;
 }
