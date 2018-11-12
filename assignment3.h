@@ -19,7 +19,7 @@ struct HBnode
 
 typedef struct HBnode *HBnodePtr;
 
-HBnodePtr createHBList(int n, int m);
+HBnodePtr createHBlist(int n, int m);
 SLnodePtr flattenList(const HBnodePtr L);
 void freeSLlist(SLnodePtr L);
 void freeHBlist(HBnodePtr L);
